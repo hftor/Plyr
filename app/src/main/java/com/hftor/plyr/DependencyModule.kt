@@ -11,7 +11,7 @@ import org.koin.dsl.module.module
  */
 object DependencyModule{
     val appModule = module{
-        single { Repo() }
+        single { Repo(get()) }
         viewModel{ PlayerViewModel(get()) }
 
     }
