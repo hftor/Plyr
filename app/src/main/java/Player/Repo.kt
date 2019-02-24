@@ -14,13 +14,16 @@ import kotlinx.coroutines.*
  */
 class Repo(private val context: Context) {
 
+
+    private var _currentSong : MusicFinder.Song? = null
+    private var currentSong : MutableLiveData<MusicFinder.Song> = MutableLiveData()
+
+
     private var songs = mutableListOf<MusicFinder.Song>()
-    private val liveTesting : MutableLiveData<List<MusicFinder.Song>> = MutableLiveData()
 
     private var mediaPlayer : MediaPlayer? = null
 
     init {
-        liveTesting.value = songs
         val deferred = GlobalScope.async{
             val songFinder = MusicFinder(context.contentResolver)
             songFinder.prepare()
@@ -31,16 +34,17 @@ class Repo(private val context: Context) {
         runBlocking {
             deferred.await()
 
-            liveTesting.value = songs
+            setCurrentSong()
 
-            var firstSong = songs?.get(0)
-            if(firstSong != null)
-            {
-                mediaPlayer = MediaPlayer.create(context, firstSong.uri)
-                mediaPlayer?.start()
-            }
+            val firstSong = songs.first()
+            mediaPlayer = MediaPlayer.create(context, firstSong.uri)
+            mediaPlayer?.start()
         }
     }
 
-    fun getData() = liveTesting as LiveData<List<MusicFinder.Song>>
+    private fun setCurrentSong(){
+        currentSong.value = songs.first()
+    }
+
+    fun getCurrentSong() = currentSong as LiveData<MusicFinder.Song>
 }

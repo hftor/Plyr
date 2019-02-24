@@ -25,11 +25,9 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), Context.CONTEXT_INCLUDE_CODE)
         }
 
-        p.getData().observe(this, Observer {
-            songs ->
-            if(!songs.isEmpty()){
-                testText.text = songs[0].title
-            }
+        p.getCurrentSong().observe(this, Observer {
+            song ->
+            testText.text = song.title
         })
     }
 }

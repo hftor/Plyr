@@ -1,10 +1,11 @@
 package Player
 
 import androidx.lifecycle.ViewModel
+import com.mtechviral.mplaylib.MusicFinder
 
 /**
  * Created by hafthorg on 22/02/2019.
  */
 class PlayerViewModel(private val repo: Repo) : ViewModel() {
-    fun getData() = repo.getData()
+    fun getCurrentSong() = repo.getCurrentSong()
 }
