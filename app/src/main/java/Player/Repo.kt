@@ -24,12 +24,19 @@ class Repo(private val context: Context) {
     private var mediaPlayer : MediaPlayer? = null
 
     init {
+        runBlocking {
+            initializeMediaPlayer()
+        }
+    }
+
+    suspend fun initializeMediaPlayer(){
         val deferred = GlobalScope.async{
             val songFinder = MusicFinder(context.contentResolver)
             songFinder.prepare()
             songFinder.allSongs
             songs = songFinder.allSongs
         }
+
 
         runBlocking {
             deferred.await()
