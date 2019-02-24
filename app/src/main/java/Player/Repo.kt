@@ -14,8 +14,7 @@ class Repo(private val context: Context) {
 
     private var mediaPlayer : MediaPlayer? = null
     private var songs : MutableList<MusicFinder.Song>? = null
-
-    fun getMessage() : String{
+    init {
         val ss = GlobalScope.async{
             val songFinder = MusicFinder(context.contentResolver)
             songFinder.prepare()
@@ -23,12 +22,12 @@ class Repo(private val context: Context) {
             songs = songFinder.allSongs
         }
 
-        var a = runBlocking {
+        runBlocking {
             ss.await()
             var firstSong = songs?.get(0)
             if(firstSong == null)
             {
-                 "meee"
+                "meee"
             }
             else{
                 mediaPlayer = MediaPlayer.create(context, firstSong.uri)
@@ -37,7 +36,9 @@ class Repo(private val context: Context) {
                 "This is a repo message from async: " + songs?.get(0)?.artist
             }
         }
+    }
 
-        return a
+    fun getMessage() : String{
+        return "This is a repo message from repo"
     }
 }
