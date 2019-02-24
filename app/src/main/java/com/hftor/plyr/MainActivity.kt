@@ -9,6 +9,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -23,8 +25,11 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), Context.CONTEXT_INCLUDE_CODE)
         }
 
-        val a = p.loadData()
-
-        Toast.makeText(applicationContext, a, Toast.LENGTH_LONG).show()
+        p.getData().observe(this, Observer {
+            songs ->
+            if(!songs.isEmpty()){
+                testText.text = songs[0].title
+            }
+        })
     }
 }
