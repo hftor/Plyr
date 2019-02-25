@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/audioList">
+    app:startDestination="@id/audioListFragment">
 
     <fragment
-        android:id="@+id/audioList"
+        android:id="@+id/audioListFragment"
         android:name="com.hftor.plyr.AudioList"
         android:label="fragment_audio_list"
         tools:layout="@layout/fragment_audio_list" >
         <action
             android:id="@+id/action_audioList_to_player"
-            app:destination="@id/player" />
+            app:destination="@id/playerFragment" />
     </fragment>
     <fragment
-        android:id="@+id/player"
-        android:name="com.hftor.plyr.Player"
+        android:id="@+id/playerFragment"
+        android:name="com.hftor.plyr.PlayerFragment"
         android:label="fragment_player"
         tools:layout="@layout/fragment_player" />
 </navigation>
