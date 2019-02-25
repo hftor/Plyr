@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/audioList">
+
+    <fragment
+        android:id="@+id/audioList"
+        android:name="com.hftor.plyr.AudioList"
+        android:label="fragment_audio_list"
+        tools:layout="@layout/fragment_audio_list" >
+        <action
+            android:id="@+id/action_audioList_to_player"
+            app:destination="@id/player" />
+    </fragment>
+    <fragment
+        android:id="@+id/player"
+        android:name="com.hftor.plyr.Player"
+        android:label="fragment_player"
+        tools:layout="@layout/fragment_player" />
+</navigation>
