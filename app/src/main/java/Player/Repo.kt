@@ -50,8 +50,15 @@ class Repo(private val context: Context) {
     }
 
     private fun setCurrentSong(){
-        currentSong.value = songs.first()
+        _currentSong = songs.first()
+        currentSong.value = _currentSong
     }
 
     fun getCurrentSong() = currentSong as LiveData<MusicFinder.Song>
+
+    fun playNext(){
+        val i = songs.indexOf(_currentSong)
+        _currentSong = songs[i+1]
+        currentSong.value = _currentSong
+    }
 }

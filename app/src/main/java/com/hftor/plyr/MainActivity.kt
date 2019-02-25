@@ -29,5 +29,14 @@ class MainActivity : AppCompatActivity() {
             song ->
             testText.text = song.title
         })
+
+        button.setOnClickListener({
+            playNext()
+        })
     }
+
+    fun playNext(){
+        p.playNext()
+    }
+
 }

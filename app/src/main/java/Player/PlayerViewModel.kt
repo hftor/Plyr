@@ -8,4 +8,6 @@ import com.mtechviral.mplaylib.MusicFinder
  */
 class PlayerViewModel(private val repo: Repo) : ViewModel() {
     fun getCurrentSong() = repo.getCurrentSong()
+
+    fun playNext() = repo.playNext()
 }
