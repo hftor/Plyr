@@ -44,21 +44,13 @@ class AudioList : Fragment() {
     }
 
     private fun songItemClicked(song : MusicFinder.Song) {
-        var a = song
+        val action = AudioListDirections.actionAudioListToPlayer(song.id)
+        findNavController().navigate(action)
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_audio_list, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // Sending data from one fragment to another fragment
-//        letsGoButton.setOnClickListener{
-//            val action = AudioListDirections.actionAudioListToPlayer()
-//            findNavController().navigate(action)
-//        }
     }
 }
