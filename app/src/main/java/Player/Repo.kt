@@ -19,7 +19,8 @@ class Repo(private val context: Context) {
     private var currentSong : MutableLiveData<MusicFinder.Song> = MutableLiveData()
 
 
-    private var songs = mutableListOf<MusicFinder.Song>()
+    private var _songs = mutableListOf<MusicFinder.Song>()
+    private var songs : MutableLiveData<List<MusicFinder.Song>> = MutableLiveData()
 
     private var mediaPlayer : MediaPlayer? = null
 
@@ -34,31 +35,31 @@ class Repo(private val context: Context) {
             val songFinder = MusicFinder(context.contentResolver)
             songFinder.prepare()
             songFinder.allSongs
-            songs = songFinder.allSongs
+            _songs = songFinder.allSongs
         }
 
 
         runBlocking {
             deferred.await()
 
-            setCurrentSong()
+            songs.value = _songs
 
-            val firstSong = songs.first()
-            mediaPlayer = MediaPlayer.create(context, firstSong.uri)
-            mediaPlayer?.start()
+            setCurrentSong()
         }
     }
 
     private fun setCurrentSong(){
-        _currentSong = songs.first()
+        _currentSong = _songs.first()
         currentSong.value = _currentSong
     }
 
     fun getCurrentSong() = currentSong as LiveData<MusicFinder.Song>
 
+    fun getAllSongs() = songs as LiveData<List<MusicFinder.Song>>
+
     fun playNext(){
-        val i = songs.indexOf(_currentSong)
-        _currentSong = songs[i+1]
+        val i = _songs.indexOf(_currentSong)
+        _currentSong = _songs[i+1]
         currentSong.value = _currentSong
     }
 }
