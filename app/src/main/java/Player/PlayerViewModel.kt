@@ -12,4 +12,6 @@ class PlayerViewModel(private val repo: Repo) : ViewModel() {
     fun getAllSongs() = repo.getAllSongs()
 
     fun playNext() = repo.playNext()
+
+    fun play(songId: Long) = repo.play(songId)
 }

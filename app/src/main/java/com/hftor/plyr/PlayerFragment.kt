@@ -27,10 +27,10 @@ class PlayerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        p.getCurrentSong().observe(this, Observer {
-//            song ->
-//            title.text = song.title
-//        })
+        p.getCurrentSong().observe(this, Observer {
+            song ->
+            title.text = song.title
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +47,7 @@ class PlayerFragment : Fragment() {
         val id = PlayerFragmentArgs.fromBundle(arguments).songId
 
         title.text = id.toString()
-        //val name = DestinationFragmentArgs.fromBundle(arguments).nameToShow
-        //welcomeWithNameTv.text = "Hello $name!"
+
+        p.play(id)
     }
 }

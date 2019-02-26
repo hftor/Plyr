@@ -48,6 +48,14 @@ class Repo(private val context: Context) {
         }
     }
 
+    private fun setCurrentSong(songId: Long){
+        _currentSong = _songs.first {
+            song -> song.id == songId
+        }
+
+        currentSong.value = _currentSong
+    }
+
     private fun setCurrentSong(){
         _currentSong = _songs.first()
         currentSong.value = _currentSong
@@ -61,5 +69,15 @@ class Repo(private val context: Context) {
         val i = _songs.indexOf(_currentSong)
         _currentSong = _songs[i+1]
         currentSong.value = _currentSong
+    }
+
+    fun play(songId: Long){
+
+        setCurrentSong(songId)
+
+        if(mediaPlayer == null){
+            mediaPlayer = MediaPlayer.create(context, _currentSong!!.uri)
+            mediaPlayer?.start()
+        }
     }
 }
