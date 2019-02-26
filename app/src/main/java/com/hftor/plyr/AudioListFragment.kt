@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mtechviral.mplaylib.MusicFinder
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 
 /**
@@ -28,29 +29,28 @@ class AudioList : Fragment() {
 
     private val p : PlayerViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_audio_list, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        audio_list.apply {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = ListAdapter(Collections.emptyList(), { song : MusicFinder.Song -> songItemClicked(song) })
+        }
 
         p.getAllSongs().observe(this, Observer {
             songs ->
-            if(!songs.isEmpty()){
-
-                audio_list.apply {
-                    layoutManager = LinearLayoutManager(activity)
-                    adapter = ListAdapter(songs, { song : MusicFinder.Song -> songItemClicked(song) })
-                }
-            }
+            (audio_list.adapter as ListAdapter).add(songs)
         })
     }
 
     private fun songItemClicked(song : MusicFinder.Song) {
         val action = AudioListDirections.actionAudioListToPlayer(song.id)
         findNavController().navigate(action)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_audio_list, container, false)
     }
 }

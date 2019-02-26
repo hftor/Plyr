@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mtechviral.mplaylib.MusicFinder
 
-class ListAdapter(private val list: List<MusicFinder.Song>, val clickListener :(MusicFinder.Song) -> Unit)
+class ListAdapter(private var list: List<MusicFinder.Song>, val clickListener :(MusicFinder.Song) -> Unit)
     : RecyclerView.Adapter<SongViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
@@ -19,5 +19,10 @@ class ListAdapter(private val list: List<MusicFinder.Song>, val clickListener :(
     }
 
     override fun getItemCount(): Int = list.size
+
+    fun add(newList: List<MusicFinder.Song>){
+        list = newList
+        notifyDataSetChanged()
+    }
 }
 

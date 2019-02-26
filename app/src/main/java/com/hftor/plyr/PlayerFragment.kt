@@ -46,8 +46,6 @@ class PlayerFragment : Fragment() {
 
         val id = PlayerFragmentArgs.fromBundle(arguments).songId
 
-        title.text = id.toString()
-
         p.play(id)
     }
 }
