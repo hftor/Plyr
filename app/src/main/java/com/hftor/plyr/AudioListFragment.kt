@@ -1,6 +1,7 @@
 package com.hftor.plyr
 
 import Player.PlayerViewModel
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_audio_list.*
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mtechviral.mplaylib.MusicFinder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -35,12 +37,15 @@ class AudioList : Fragment() {
 
                 audio_list.apply {
                     layoutManager = LinearLayoutManager(activity)
-                    adapter = ListAdapter(songs)
+                    adapter = ListAdapter(songs, { song : MusicFinder.Song -> songItemClicked(song) })
                 }
             }
         })
     }
 
+    private fun songItemClicked(song : MusicFinder.Song) {
+        var a = song
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment

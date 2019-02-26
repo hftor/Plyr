@@ -18,5 +18,6 @@
         android:id="@+id/playerFragment"
         android:name="com.hftor.plyr.PlayerFragment"
         android:label="fragment_player"
-        tools:layout="@layout/fragment_player" />
+        tools:layout="@layout/fragment_player">
+    </fragment>
 </navigation>
