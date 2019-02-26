@@ -1,7 +1,7 @@
 package Player
 
 import android.content.Context
-import android.media.MediaPlayer;
+import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mtechviral.mplaylib.MusicFinder
@@ -13,7 +13,6 @@ import kotlinx.coroutines.*
  * Created by hafthorg on 22/02/2019.
  */
 class Repo(private val context: Context) {
-
 
     private var _currentSong : MusicFinder.Song? = null
     private var currentSong : MutableLiveData<MusicFinder.Song> = MutableLiveData()
@@ -43,8 +42,6 @@ class Repo(private val context: Context) {
             deferred.await()
 
             songs.value = _songs
-
-            setCurrentSong()
         }
     }
 
@@ -72,12 +69,21 @@ class Repo(private val context: Context) {
     }
 
     fun play(songId: Long){
+        if(_currentSong?.id == songId){
+            return
+        }
 
         setCurrentSong(songId)
 
-        if(mediaPlayer == null){
+        if(mediaPlayer == null)
+        {
             mediaPlayer = MediaPlayer.create(context, _currentSong!!.uri)
             mediaPlayer?.start()
+            return
         }
+
+        mediaPlayer?.stop()
+        mediaPlayer = MediaPlayer.create(context, _currentSong!!.uri)
+        mediaPlayer?.start()
     }
 }
