@@ -23,9 +23,12 @@ class Repo(private val context: Context) {
     init {
         var songFinder = MusicFinder(context.contentResolver)
         songFinder.prepare()
+        setSongs(songFinder.allSongs)
+    }
 
-        _songs = songFinder.allSongs
-        songs.value = _songs
+    private fun setSongs(songsToSet : MutableList<MusicFinder.Song>){
+        _songs = songsToSet
+        songs.value = songsToSet
     }
 
     private fun setCurrentSong(songId: Long){
@@ -36,9 +39,9 @@ class Repo(private val context: Context) {
         currentSong.value = _currentSong
     }
 
-    private fun setCurrentSong(){
-        _currentSong = _songs.first()
-        currentSong.value = _currentSong
+    private fun setCurrentSong(songToSet : MusicFinder.Song){
+        _currentSong = songToSet
+        currentSong.value = songToSet
     }
 
     fun getCurrentSong() = currentSong as LiveData<MusicFinder.Song>
@@ -47,8 +50,7 @@ class Repo(private val context: Context) {
 
     fun playNext(){
         val i = _songs.indexOf(_currentSong)
-        _currentSong = _songs[i+1]
-        currentSong.value = _currentSong
+        setCurrentSong(_songs[i])
     }
 
     fun play(songId: Long){
