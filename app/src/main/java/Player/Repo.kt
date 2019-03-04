@@ -4,7 +4,14 @@ import android.content.Context
 import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.hftor.plyr.dao.SongInfoDao
+import com.hftor.plyr.dataBase.AppDataBase
+import com.hftor.plyr.entity.SongInfo
 import com.mtechviral.mplaylib.MusicFinder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Created by hafthorg on 22/02/2019.
@@ -20,10 +27,18 @@ class Repo(private val context: Context) {
 
     private var mediaPlayer : MediaPlayer? = null
 
+    private var db: AppDataBase? = null
+    private var songInfoDao: SongInfoDao? = null
+
+    private var songPosition: Int = 0
+
     init {
         var songFinder = MusicFinder(context.contentResolver)
         songFinder.prepare()
         setSongs(songFinder.allSongs)
+
+/*        db = AppDataBase.getAppDataBase(context)
+        songInfoDao = db?.songInfoDao()*/
     }
 
     private fun setSongs(songsToSet : MutableList<MusicFinder.Song>){
@@ -39,9 +54,18 @@ class Repo(private val context: Context) {
         currentSong.value = _currentSong
     }
 
-    private fun setCurrentSong(songToSet : MusicFinder.Song){
+    private fun setCurrentSong(songToSet : MusicFinder.Song?){
         _currentSong = songToSet
         currentSong.value = songToSet
+    }
+
+    private fun saveSongsState(songToSave : MusicFinder.Song?){
+        GlobalScope.launch {
+            if(songToSave != null && mediaPlayer != null){
+                var s1 = SongInfo(songToSave.id, mediaPlayer!!.currentPosition)
+                songInfoDao?.insertSongInfo(s1)
+            }
+        }
     }
 
     fun getCurrentSong() = currentSong as LiveData<MusicFinder.Song>
@@ -58,6 +82,15 @@ class Repo(private val context: Context) {
             return
         }
 
+        //saveSongsState(_currentSong)
+
+/*        var a = GlobalScope.async {
+            var a = songInfoDao?.getSongInfo(songId)
+            if(a != null){
+                songPosition = a.position
+            }
+        }*/
+
         setCurrentSong(songId)
 
         if(mediaPlayer == null)
@@ -70,5 +103,9 @@ class Repo(private val context: Context) {
         mediaPlayer?.stop()
         mediaPlayer = MediaPlayer.create(context, _currentSong!!.uri)
         mediaPlayer?.start()
+    }
+
+    private suspend fun playFromCurrentPosition(){
+
     }
 }

@@ -2,6 +2,7 @@ package com.hftor.plyr
 
 import Player.PlayerViewModel
 import Player.Repo
+import com.hftor.plyr.dataBase.AppDataBase
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 
