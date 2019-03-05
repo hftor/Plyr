@@ -4,8 +4,6 @@ import android.content.Context
 import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.hftor.plyr.dao.SongInfoDao
-import com.hftor.plyr.dataBase.AppDataBase
 import com.hftor.plyr.repo.SongInfoRepository
 import com.mtechviral.mplaylib.MusicFinder
 import kotlinx.coroutines.*
@@ -58,16 +56,16 @@ class Repo(private val context: Context, private val songInfoRepository: SongInf
     }
 
     fun play(songId: Long){
+        if(_currentSong?.id == songId){
+            return
+        }
+
         GlobalScope.launch {
             play2(songId)
         }
     }
 
     private suspend fun play2(songId: Long){
-        if(_currentSong?.id == songId){
-            return
-        }
-
         songInfoRepository.saveSongsState(_currentSong, mediaPlayer?.currentPosition)
 
         GlobalScope.launch(Dispatchers.Main.immediate) {
