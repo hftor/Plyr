@@ -14,24 +14,15 @@ abstract class AppDataBase : RoomDatabase() {
 
     companion object {
 
-        var TEST_MODE = false
-
         var db: AppDataBase? = null
         var dbInstance: SongInfoDao? = null
 
         fun getInstance(context: Context): SongInfoDao? {
             if (db == null){
-                if(TEST_MODE){
-                    db = Room.inMemoryDatabaseBuilder(context.applicationContext, AppDataBase::class.java)
-                            .allowMainThreadQueries()
-                            .build()
-                    dbInstance = db?.songInfoDao()
-                }
-                else{
-                    db = Room.databaseBuilder(context.applicationContext, AppDataBase::class.java, "myDB")
-                            .build()
-                    dbInstance = db?.songInfoDao()
-                }
+                db = Room.databaseBuilder(context.applicationContext, AppDataBase::class.java, "myDB")
+                        .allowMainThreadQueries()
+                        .build()
+                dbInstance = db?.songInfoDao()
             }
 
             return dbInstance!!

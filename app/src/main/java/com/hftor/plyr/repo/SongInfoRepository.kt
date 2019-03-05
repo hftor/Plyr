@@ -4,9 +4,6 @@ import android.content.Context
 import com.hftor.plyr.dataBase.AppDataBase
 import com.hftor.plyr.entity.SongInfo
 import com.mtechviral.mplaylib.MusicFinder
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 class SongInfoRepository(private val context: Context) {
 
@@ -15,17 +12,11 @@ class SongInfoRepository(private val context: Context) {
             return
         }
 
-        GlobalScope.launch {
-            var s1 = SongInfo(songToSave.id, songPosition)
-            AppDataBase.getInstance(context)?.insertSongInfo(s1)
-        }
+        var s1 = SongInfo(songToSave.id, songPosition)
+        AppDataBase.getInstance(context)?.insertSongInfo(s1)
     }
 
-    suspend fun getSongPosition(songId: Long) : Int{
-        var songPosDeferred = GlobalScope.async {
-            AppDataBase.getInstance(context)?.getSongInfo(songId)?.position ?: 0
-        }
-
-        return songPosDeferred.await()
+    fun getSongPosition(songId: Long) : Int{
+        return AppDataBase.getInstance(context)?.getSongInfo(songId)?.position ?: 0
     }
 }

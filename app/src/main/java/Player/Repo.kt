@@ -55,26 +55,17 @@ class Repo(private val context: Context, private val songInfoRepository: SongInf
         setCurrentSong(_songs[i])
     }
 
-    fun play(songId: Long){
-        if(_currentSong?.id == songId){
+    fun play(songId: Long) {
+        if (_currentSong?.id == songId) {
             return
         }
 
-        GlobalScope.launch {
-            play2(songId)
-        }
-    }
-
-    private suspend fun play2(songId: Long){
         songInfoRepository.saveSongsState(_currentSong, mediaPlayer?.currentPosition)
+        setCurrentSong(songId)
 
-        GlobalScope.launch(Dispatchers.Main.immediate) {
-            setCurrentSong(songId)
-
-            mediaPlayer?.stop()
-            mediaPlayer = MediaPlayer.create(context, _currentSong!!.uri)
-            mediaPlayer?.seekTo(songInfoRepository.getSongPosition(songId))
-            mediaPlayer?.start()
-        }
+        mediaPlayer?.stop()
+        mediaPlayer = MediaPlayer.create(context, _currentSong!!.uri)
+        mediaPlayer?.seekTo(songInfoRepository.getSongPosition(songId))
+        mediaPlayer?.start()
     }
 }
