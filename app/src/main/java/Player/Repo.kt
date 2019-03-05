@@ -8,10 +8,7 @@ import com.hftor.plyr.dao.SongInfoDao
 import com.hftor.plyr.dataBase.AppDataBase
 import com.hftor.plyr.entity.SongInfo
 import com.mtechviral.mplaylib.MusicFinder
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 /**
  * Created by hafthorg on 22/02/2019.
@@ -37,8 +34,8 @@ class Repo(private val context: Context) {
         songFinder.prepare()
         setSongs(songFinder.allSongs)
 
-/*        db = AppDataBase.getAppDataBase(context)
-        songInfoDao = db?.songInfoDao()*/
+        db = AppDataBase.getAppDataBase(context)
+        songInfoDao = db?.songInfoDao()
     }
 
     private fun setSongs(songsToSet : MutableList<MusicFinder.Song>){
@@ -78,34 +75,29 @@ class Repo(private val context: Context) {
     }
 
     fun play(songId: Long){
+        GlobalScope.launch {
+            play2(songId)
+        }
+    }
+
+    private suspend fun play2(songId: Long){
         if(_currentSong?.id == songId){
             return
         }
 
-        //saveSongsState(_currentSong)
+        saveSongsState(_currentSong)
 
-/*        var a = GlobalScope.async {
-            var a = songInfoDao?.getSongInfo(songId)
-            if(a != null){
-                songPosition = a.position
-            }
-        }*/
-
-        setCurrentSong(songId)
-
-        if(mediaPlayer == null)
-        {
-            mediaPlayer = MediaPlayer.create(context, _currentSong!!.uri)
-            mediaPlayer?.start()
-            return
+        var songPosDefered = GlobalScope.async {
+            songInfoDao?.getSongInfo(songId)?.position
         }
 
-        mediaPlayer?.stop()
-        mediaPlayer = MediaPlayer.create(context, _currentSong!!.uri)
-        mediaPlayer?.start()
-    }
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            setCurrentSong(songId)
 
-    private suspend fun playFromCurrentPosition(){
-
+            mediaPlayer?.stop()
+            mediaPlayer = MediaPlayer.create(context, _currentSong!!.uri)
+            mediaPlayer?.seekTo(songPosDefered.await() ?: 0)
+            mediaPlayer?.start()
+        }
     }
 }
